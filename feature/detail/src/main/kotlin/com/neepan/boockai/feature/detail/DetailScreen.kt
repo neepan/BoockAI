@@ -41,6 +41,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -222,12 +224,14 @@ fun BookDetailScreen(
 
                     // Badges row
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(IntrinsicSize.Min),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        BadgeItem(label = "Rating", value = "${book.rating} / 5")
-                        BadgeItem(label = "Genre", value = book.genre)
-                        BadgeItem(label = "Time", value = book.estimatedReadTime)
+                        BadgeItem(label = "Rating", value = "${book.rating} / 5", modifier = Modifier.weight(1f).fillMaxHeight())
+                        BadgeItem(label = "Genre", value = book.genre, modifier = Modifier.weight(1f).fillMaxHeight())
+                        BadgeItem(label = "Time", value = book.estimatedReadTime, modifier = Modifier.weight(1f).fillMaxHeight())
                     }
 
                     Spacer(modifier = Modifier.height(32.dp))
@@ -259,26 +263,29 @@ fun BookDetailScreen(
 }
 
 @Composable
-private fun BadgeItem(label: String, value: String) {
+private fun BadgeItem(label: String, value: String, modifier: Modifier = Modifier) {
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = Modifier.padding(horizontal = 4.dp)
+        modifier = modifier
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp, vertical = 12.dp)
         ) {
             Text(
                 text = value,
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.secondary
+                color = MaterialTheme.colorScheme.secondary,
+                textAlign = TextAlign.Center
             )
         }
     }
