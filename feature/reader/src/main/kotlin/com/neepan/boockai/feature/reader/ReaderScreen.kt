@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +28,8 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,9 +45,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neepan.boockai.core.designsystem.component.BoockTopAppBar
 import com.neepan.boockai.core.designsystem.theme.ReaderDarkBackground
-import com.neepan.boockai.core.designsystem.theme.ReaderDarkSurface
 import com.neepan.boockai.core.designsystem.theme.ReaderDarkText
 import com.neepan.boockai.core.designsystem.theme.ReaderLightBackground
+import com.neepan.boockai.core.designsystem.theme.ReaderLightText
 import com.neepan.boockai.core.designsystem.theme.ReaderSepiaBackground
 import com.neepan.boockai.core.designsystem.theme.ReaderSepiaText
 import com.neepan.boockai.core.model.ReaderPreferences
@@ -83,7 +88,7 @@ fun ReaderScreen(
         ReaderTheme.DARK -> ReaderDarkBackground
     }
     val textColor = when (theme) {
-        ReaderTheme.LIGHT -> MaterialTheme.colorScheme.onSurface
+        ReaderTheme.LIGHT -> ReaderLightText
         ReaderTheme.SEPIA -> ReaderSepiaText
         ReaderTheme.DARK -> ReaderDarkText
     }
@@ -95,14 +100,27 @@ fun ReaderScreen(
 
     Scaffold(
         topBar = {
-            BoockTopAppBar(
-                title = state.currentChapter?.title ?: "",
-                onBackClick = { onAction(ReaderAction.OnBackClicked) },
+            TopAppBar(
+                title = { 
+                    Text(
+                        text = state.currentChapter?.title ?: "",
+                        style = MaterialTheme.typography.titleMedium
+                    ) 
+                },
+                navigationIcon = {
+                    IconButton(onClick = { onAction(ReaderAction.OnBackClicked) }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = textColor)
+                    }
+                },
                 actions = {
                     IconButton(onClick = { onAction(ReaderAction.OnSettingsClicked) }) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings", tint = MaterialTheme.colorScheme.onSurface)
+                        Icon(Icons.Default.Settings, contentDescription = "Settings", tint = textColor)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    titleContentColor = textColor
+                )
             )
         },
         bottomBar = {
@@ -153,12 +171,16 @@ fun ReaderScreen(
 
                 Text(
                     text = state.currentChapter.content,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = fontSize),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = fontSize,
+                        lineHeight = fontSize * 1.6f, // Enhance readability with better line height
+                        letterSpacing = 0.5.sp
+                    ),
                     color = textColor,
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(scrollState)
-                        .padding(16.dp)
+                        .padding(horizontal = 24.dp, vertical = 16.dp)
                 )
             }
         }
@@ -202,20 +224,22 @@ fun ReaderSettingsSheet(
             ) {
                 TextSizeOption.entries.forEach { option ->
                     Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = if (preferences.textSize == option) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
-                        onClick = { onAction(ReaderAction.OnTextSizeChanged(option)) }
+                        shape = CircleShape,
+                        color = if (preferences.textSize == option) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                        onClick = { onAction(ReaderAction.OnTextSizeChanged(option)) },
+                        modifier = Modifier.size(64.dp)
                     ) {
-                        Text(
-                            text = "A",
-                            fontSize = when(option) {
-                                TextSizeOption.SMALL -> 14.sp
-                                TextSizeOption.MEDIUM -> 18.sp
-                                TextSizeOption.LARGE -> 24.sp
-                            },
-                            modifier = Modifier.padding(16.dp),
-                            color = if (preferences.textSize == option) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                            Text(
+                                text = "Aa",
+                                fontSize = when(option) {
+                                    TextSizeOption.SMALL -> 14.sp
+                                    TextSizeOption.MEDIUM -> 18.sp
+                                    TextSizeOption.LARGE -> 22.sp
+                                },
+                                color = if (preferences.textSize == option) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
             }
@@ -236,7 +260,7 @@ fun ReaderSettingsSheet(
                     theme = ReaderTheme.LIGHT,
                     selectedTheme = preferences.readerTheme,
                     backgroundColor = ReaderLightBackground,
-                    textColor = MaterialTheme.colorScheme.onSurface,
+                    textColor = ReaderLightText,
                     onAction = onAction
                 )
                 ThemeButton(
@@ -249,7 +273,7 @@ fun ReaderSettingsSheet(
                 ThemeButton(
                     theme = ReaderTheme.DARK,
                     selectedTheme = preferences.readerTheme,
-                    backgroundColor = ReaderDarkSurface,
+                    backgroundColor = ReaderDarkBackground,
                     textColor = ReaderDarkText,
                     onAction = onAction
                 )
@@ -267,16 +291,20 @@ private fun ThemeButton(
     textColor: Color,
     onAction: (ReaderAction) -> Unit
 ) {
+    val isSelected = theme == selectedTheme
     Surface(
-        shape = RoundedCornerShape(8.dp),
+        shape = CircleShape,
         color = backgroundColor,
-        border = if (theme == selectedTheme) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
-        onClick = { onAction(ReaderAction.OnThemeChanged(theme)) }
+        onClick = { onAction(ReaderAction.OnThemeChanged(theme)) },
+        modifier = Modifier.size(64.dp),
+        border = if (isSelected) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
     ) {
-        Text(
-            text = theme.name.lowercase().replaceFirstChar { it.uppercase() },
-            color = textColor,
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
-        )
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+            Text(
+                text = theme.name.lowercase().replaceFirstChar { it.uppercase() },
+                color = textColor,
+                style = MaterialTheme.typography.labelLarge
+            )
+        }
     }
 }

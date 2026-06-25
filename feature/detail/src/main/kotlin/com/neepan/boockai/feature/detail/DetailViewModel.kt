@@ -59,15 +59,20 @@ class BookDetailViewModel @Inject constructor(
             }
 
             val isSaved = bookDataSource.isBookSaved(bookId)
-            val progress = progressDataSource.getProgress(bookId)
 
             _state.update {
                 it.copy(
                     book = book,
                     isSaved = isSaved,
-                    progress = progress,
                     isLoading = false
                 )
+            }
+
+            // Continuously observe progress so it updates instantly when returning from Reader
+            launch {
+                progressDataSource.observeProgress(bookId).collect { progress ->
+                    _state.update { it.copy(progress = progress) }
+                }
             }
         }
     }

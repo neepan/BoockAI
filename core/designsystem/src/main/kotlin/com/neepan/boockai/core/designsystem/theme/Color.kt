@@ -34,6 +34,9 @@ val ReaderSepiaBackground = Color(0xFFF4ECD8)
 val ReaderDarkBackground = Color(0xFF121212)
 val ReaderDarkSurface = Color(0xFF1E1E1E)
 val ReaderDarkCardSurface = Color(0xFF2A2A2A)
+
+// Reader Text Colors
+val ReaderLightText = Color(0xFF1C1B1F)
 val ReaderDarkText = Color(0xFFE0E0E0)
 val ReaderSepiaText = Color(0xFF4A3F35)
 val ReaderSepiaSecondary = Color(0xFF5C4D3C)

@@ -20,5 +20,6 @@ dependencies {
     debugApi(libs.androidx.compose.ui.tooling)
     
     api(libs.coil.compose)
+    api(libs.coil.network.okhttp)
     api(libs.androidx.core.ktx)
 }

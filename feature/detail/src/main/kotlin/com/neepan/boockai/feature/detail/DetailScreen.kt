@@ -19,7 +19,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,7 +34,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -94,8 +99,9 @@ fun BookDetailScreen(
                     color = MaterialTheme.colorScheme.surface,
                     shadowElevation = 8.dp
                 ) {
-                    val progressText = if (state.progress != null && state.progress.progressPercent > 0f) {
-                        "Continue Reading (${(state.progress.progressPercent * 100).roundToInt()}%)"
+                    val isStarted = state.progress != null && state.progress.progressPercent > 0f
+                    val progressText = if (isStarted) {
+                        "Continue Reading (${(state.progress!!.progressPercent * 100).roundToInt()}%)"
                     } else {
                         "Start Reading"
                     }
@@ -103,12 +109,20 @@ fun BookDetailScreen(
                         onClick = { onAction(BookDetailAction.OnStartReadingClicked) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
-                            .height(56.dp)
+                            .padding(horizontal = 24.dp, vertical = 16.dp)
+                            .height(56.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
                     ) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = progressText,
-                            style = MaterialTheme.typography.titleLarge
+                            style = MaterialTheme.typography.titleMedium
                         )
                     }
                 }
@@ -132,24 +146,60 @@ fun BookDetailScreen(
                 )
             } else {
                 val book = state.book
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Cover
+                
+                // Spotify-like background glow
+                Box(modifier = Modifier.fillMaxSize()) {
                     AsyncImage(
                         model = book.coverUrl,
-                        contentDescription = "Cover of ${book.title}",
+                        contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .width(200.dp)
-                            .aspectRatio(2f / 3f)
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .align(Alignment.TopCenter)
+                            .blur(radius = 80.dp)
+                            .clip(RoundedCornerShape(bottomStart = 100.dp, bottomEnd = 100.dp))
                     )
+                    
+                    // Gradient overlay to blend it smoothly into the background
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        Color.Transparent,
+                                        MaterialTheme.colorScheme.background.copy(alpha = 0.8f),
+                                        MaterialTheme.colorScheme.background
+                                    ),
+                                    startY = 0f,
+                                    endY = 1000f
+                                )
+                            )
+                    )
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 24.dp, vertical = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                    // Cover
+                    Surface(
+                        shape = RoundedCornerShape(16.dp),
+                        shadowElevation = 12.dp,
+                        color = MaterialTheme.colorScheme.surfaceVariant
+                    ) {
+                        AsyncImage(
+                            model = book.coverUrl,
+                            contentDescription = "Cover of ${book.title}",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .width(200.dp)
+                                .aspectRatio(2f / 3f)
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(24.dp))
 
@@ -165,7 +215,7 @@ fun BookDetailScreen(
                     Text(
                         text = book.author,
                         style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.primary
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -206,20 +256,30 @@ fun BookDetailScreen(
         }
     }
 }
+}
 
 @Composable
 private fun BadgeItem(label: String, value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.secondary
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = value,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface
-        )
+    Surface(
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        modifier = Modifier.padding(horizontal = 4.dp)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+        ) {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
     }
 }
