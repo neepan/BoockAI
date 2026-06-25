@@ -1,0 +1,30 @@
+
+import com.android.build.api.dsl.LibraryExtension
+import org.gradle.api.JavaVersion
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
+
+class AndroidLibraryConventionPlugin : Plugin<Project> {
+    override fun apply(target: Project) {
+        with(target) {
+            // Step 1: Apply the plugins this module needs
+            pluginManager.apply("com.android.library")
+
+            // Step 2: Configure the android { } block
+            extensions.configure<LibraryExtension> {
+                compileSdk = 36
+
+                defaultConfig {
+                    minSdk = 24
+                    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+                }
+
+                compileOptions {
+                    sourceCompatibility = JavaVersion.VERSION_11
+                    targetCompatibility = JavaVersion.VERSION_11
+                }
+            }
+        }
+    }
+}
