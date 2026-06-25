@@ -1,0 +1,5 @@
+int font literata_regular 0x0
+int font plus_jakarta_sans_bold 0x0
+int font plus_jakarta_sans_medium 0x0
+int font plus_jakarta_sans_regular 0x0
+int font plus_jakarta_sans_semibold 0x0

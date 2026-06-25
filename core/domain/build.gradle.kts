@@ -3,5 +3,10 @@ plugins {
 }
 
 android {
-    namespace = "com.neepan.booackai.domain"
+    namespace = "com.neepan.boockai.core.domain"
+}
+
+dependencies {
+    api(projects.core.model)
+    implementation(libs.kotlinx.coroutines.core)
 }

@@ -1,0 +1,6 @@
+com.neepan.boockai.core.designsystem
+font literata_regular
+font plus_jakarta_sans_bold
+font plus_jakarta_sans_medium
+font plus_jakarta_sans_regular
+font plus_jakarta_sans_semibold

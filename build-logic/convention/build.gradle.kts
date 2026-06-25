@@ -12,6 +12,14 @@ dependencies {
 }
 gradlePlugin{
     plugins{
+        register("androidFeature") {
+            id = "boockai.android.feature"
+            implementationClass = "AndroidFeatureConventionPlugin"
+        }
+        register("androidHilt") {
+            id = "boockai.android.hilt"
+            implementationClass = "AndroidHiltConventionPlugin"
+        }
         register("androidLibrary") {
             id = "boockai.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"

@@ -1,0 +1,16 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/neepan/AndroidStudioProjects/BoockAI/core/model/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest4817846722090314459.xml:2:13-83
+INJECTED from /home/neepan/AndroidStudioProjects/BoockAI/core/model/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest4817846722090314459.xml:2:13-83
+	package
+		INJECTED from /home/neepan/AndroidStudioProjects/BoockAI/core/model/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest4817846722090314459.xml
+	xmlns:android
+		ADDED from /home/neepan/AndroidStudioProjects/BoockAI/core/model/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest4817846722090314459.xml:2:23-81
+uses-sdk
+INJECTED from /home/neepan/AndroidStudioProjects/BoockAI/core/model/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest4817846722090314459.xml reason: use-sdk injection requested
+INJECTED from /home/neepan/AndroidStudioProjects/BoockAI/core/model/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest4817846722090314459.xml
+INJECTED from /home/neepan/AndroidStudioProjects/BoockAI/core/model/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest4817846722090314459.xml
+	android:targetSdkVersion
+		INJECTED from /home/neepan/AndroidStudioProjects/BoockAI/core/model/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest4817846722090314459.xml
+	android:minSdkVersion
+		INJECTED from /home/neepan/AndroidStudioProjects/BoockAI/core/model/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest4817846722090314459.xml
